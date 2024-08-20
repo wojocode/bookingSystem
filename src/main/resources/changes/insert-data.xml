@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet author="wojtek" id="20240818_wojtek_01">
+        <sql>
+            INSERT INTO bus (capacity)
+            VALUES (50);
+        </sql>
+    </changeSet>
+    <changeSet author="wojtek" id="20240818_wojtek_02">
+        <sql>
+            INSERT INTO ticket (name, surname, bus_id)
+            VALUES ('Jane',
+                    'Smith',
+                    (SELECT MAX(id) FROM bus));
+        </sql>
+        <!--Uzywanie zmiennych do przechwycenia nowo dodanego wpisu (jego id)  -->
+        <!--         <sql>-->
+        <!--        DECLARE @InsertedID table (ID int)-->
+
+        <!--        INSERT INTO some_table (some_column)-->
+        <!--        OUTPUT INSERTED.ID INTO @InsertedID-->
+        <!--        VALUES ('some_value')-->
+
+        <!--        INSERT INTO another_table (related_column)-->
+        <!--        SELECT ID FROM @InsertedID-->
+        <!--    </sql>-->
+    </changeSet>
+</databaseChangeLog>

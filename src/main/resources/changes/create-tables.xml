@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="wojtek" id="20240818_wojtek_001">
+        <sql>
+            CREATE TABLE bus
+            (
+                id       INT AUTO_INCREMENT,
+                capacity INT NOT NULL,
+                PRIMARY KEY (id)
+            );
+        </sql>
+    </changeSet>
+    <changeSet author="wojtek" id="20240818_wojtek_002">
+        <sql>
+            CREATE TABLE ticket
+            (
+                id      INT AUTO_INCREMENT,
+                name    VARCHAR(255) NOT NULL,
+                surname VARCHAR(255) NOT NULL,
+                bus_id  INT,
+                version BIGINT       NOT NULL DEFAULT 0,
+                PRIMARY KEY (id),
+                CONSTRAINT FK_BUS FOREIGN KEY (bus_id) REFERENCES bus (id)
+            );
+
+        </sql>
+    </changeSet>
+    <changeSet author="wojtek" id="20240820_wojtek_001">
+            <sql>
+                CREATE VIEW bus_view AS
+                SELECT
+                    b.id,
+                    b.capacity,
+                    COUNT(t.id) AS number_of_tickets
+                FROM
+                    bus b
+                        LEFT JOIN
+                    ticket t ON b.id = t.bus_id
+                GROUP BY
+                    b.id;
+            </sql>
+    </changeSet>
+
+</databaseChangeLog>

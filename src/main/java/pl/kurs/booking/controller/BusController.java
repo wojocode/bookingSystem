@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.kurs.booking.command.CreateTicketCommand;
-import pl.kurs.booking.dto.BusDto;
-import pl.kurs.booking.command.CreateBusCommand;
-import pl.kurs.booking.dto.BusDtoWithTickets;
+import pl.kurs.booking.model.command.CreateTicketCommand;
+import pl.kurs.booking.model.dto.BusDto;
+import pl.kurs.booking.model.command.CreateBusCommand;
+import pl.kurs.booking.model.dto.BusDtoWithTickets;
 import pl.kurs.booking.model.Bus;
 import pl.kurs.booking.model.views.BusView;
 import pl.kurs.booking.service.BusService;
@@ -31,7 +31,7 @@ public class BusController {
     private final BusService busService;
 
     @PostMapping
-    public ResponseEntity<BusDto> createBus(@Valid @RequestBody CreateBusCommand command) {
+    public ResponseEntity<BusDto> addBus(@Valid @RequestBody CreateBusCommand command) {
         Bus saved = busService.addBus(command);
         return ResponseEntity.status(HttpStatus.CREATED).body(BusDto.fromBus(saved));
     }
@@ -64,8 +64,8 @@ public class BusController {
     }
 
 
-    @PostMapping("/{id}")
-    public ResponseEntity<BusDto> buyTicket(@PathVariable int id, @RequestBody CreateTicketCommand command) {
+    @PostMapping("/{id}/ticket")
+    public ResponseEntity<BusDto> buyTicket(@PathVariable int id, @RequestBody @Valid CreateTicketCommand command) {
         Bus saved = ticketService.addTicket(id, command);
         return ResponseEntity.ok(BusDto.fromBus(saved));
     }

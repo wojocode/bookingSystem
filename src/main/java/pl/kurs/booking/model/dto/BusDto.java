@@ -1,10 +1,6 @@
-package pl.kurs.booking.dto;
+package pl.kurs.booking.model.dto;
 
 import pl.kurs.booking.model.Bus;
-import pl.kurs.booking.model.Ticket;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 
 public record BusDto(int id) {

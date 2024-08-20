@@ -1,4 +1,4 @@
-package pl.kurs.booking.command;
+package pl.kurs.booking.model.command;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;

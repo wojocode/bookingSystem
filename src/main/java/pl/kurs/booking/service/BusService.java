@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.kurs.booking.command.CreateBusCommand;
+import pl.kurs.booking.model.command.CreateBusCommand;
 import pl.kurs.booking.model.Bus;
 import pl.kurs.booking.model.Ticket;
 import pl.kurs.booking.model.views.BusView;

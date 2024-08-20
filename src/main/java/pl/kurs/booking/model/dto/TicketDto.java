@@ -1,4 +1,4 @@
-package pl.kurs.booking.dto;
+package pl.kurs.booking.model.dto;
 
 import pl.kurs.booking.model.Ticket;
 

@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.kurs.booking.command.UpdateTicketCommand;
-import pl.kurs.booking.dto.TicketDto;
+import pl.kurs.booking.model.command.UpdateTicketCommand;
+import pl.kurs.booking.model.dto.TicketDto;
 import pl.kurs.booking.model.Ticket;
 import pl.kurs.booking.service.TicketService;
 

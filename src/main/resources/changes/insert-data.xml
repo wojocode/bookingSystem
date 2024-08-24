@@ -28,6 +28,26 @@
         <!--        SELECT ID FROM @InsertedID-->
         <!--    </sql>-->
 
-        <!--  MOZNA TEZ UZYC valueComputed = " SElect id where cos tam tu wpisujemy selecta -->
+        <!--  MOZNA TEZ UZYC valueComputed = " Select id from bus where name = 'skibus'  nie wspierane przez wszystkie bd-->
+    </changeSet>
+    <changeSet author="wojtek" id="20240824_wojtek_01">
+        <insert tableName="dictionary">
+            <column name="name" value="DISCOUNTS"/>
+        </insert>
+    </changeSet>
+
+    <changeSet author="wojtek" id="20240824_wojtek_02">
+        <sql>
+            SET
+            @discounts_id = (SELECT id FROM dictionary WHERE name = 'DISCOUNTS');
+        </sql>
+        <insert tableName="dictionary_value">
+            <column name="dictionary_value" value="STUDENT"/>
+            <column name="dictionary_id" valueComputed="@discounts_id"/>
+        </insert>
+        <insert tableName="dictionary_value">
+            <column name="dictionary_value" value="SENIOR"/>
+            <column name="dictionary_id" valueComputed="@discounts_id"/>
+        </insert>
     </changeSet>
 </databaseChangeLog>

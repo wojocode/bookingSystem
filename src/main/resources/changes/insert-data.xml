@@ -27,5 +27,7 @@
         <!--        INSERT INTO another_table (related_column)-->
         <!--        SELECT ID FROM @InsertedID-->
         <!--    </sql>-->
+
+        <!--  MOZNA TEZ UZYC valueComputed = " SElect id where cos tam tu wpisujemy selecta -->
     </changeSet>
 </databaseChangeLog>

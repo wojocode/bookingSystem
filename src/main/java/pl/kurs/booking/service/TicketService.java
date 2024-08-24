@@ -2,6 +2,8 @@ package pl.kurs.booking.service;
 
 import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.kurs.booking.model.command.CreateTicketCommand;
@@ -11,8 +13,10 @@ import pl.kurs.booking.exceptions.TicketConflictException;
 import pl.kurs.booking.exceptions.TicketNotFoundException;
 import pl.kurs.booking.model.Bus;
 import pl.kurs.booking.model.Ticket;
+import pl.kurs.booking.model.projection.TicketProjection;
 import pl.kurs.booking.repository.BusRepository;
 import pl.kurs.booking.repository.TicketRepository;
+
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +37,11 @@ public class TicketService {
     @Transactional(readOnly = true)
     public Ticket getTicket(int ticketId) {
         return ticketRepository.findById(ticketId).orElseThrow(TicketNotFoundException::new);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<TicketProjection> getTickets(Pageable pageable) {
+        return ticketRepository.findAllProjection(pageable);
     }
 
     @Transactional
@@ -63,7 +72,6 @@ public class TicketService {
         ticket.removeTicket();
         ticketRepository.delete(ticket);
     }
-
 
 
     private void validTicketId(int id, UpdateTicketCommand command) {

@@ -37,5 +37,10 @@ public class Dictionary {
         dictionaryValuesSet.add(new DictionaryValue(value, this));
     }
 
+    public void removeValue(DictionaryValue dictionaryValue) {
+        dictionaryValuesSet.remove(dictionaryValue);
+        dictionaryValue.setDictionary(null);
+    }
+
 
 }

@@ -1,5 +1,6 @@
 package pl.kurs.dictionary.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,13 +10,18 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.kurs.dictionary.model.Dictionary;
+import pl.kurs.dictionary.model.DictionaryValue;
 import pl.kurs.dictionary.model.command.CreateDictionaryCommand;
 import pl.kurs.dictionary.model.command.CreateDictionaryValuesCommand;
+import pl.kurs.dictionary.model.command.UpdateDictionaryCommand;
+import pl.kurs.dictionary.model.command.UpdateDictionaryValueCommand;
 import pl.kurs.dictionary.model.dto.DictionaryDto;
+import pl.kurs.dictionary.model.dto.DictionaryValueDto;
 import pl.kurs.dictionary.service.DictionaryService;
 
 @RestController
@@ -30,8 +36,8 @@ public class DictionaryController {
         return ResponseEntity.status(HttpStatus.CREATED).body(DictionaryDto.fromDictionary(saved));
     }
 
-    @PostMapping("/{dictionaryName}/dictionaryValues")
-    public ResponseEntity<DictionaryDto> addDictionaryValues(@PathVariable String dictionaryName, @RequestBody CreateDictionaryValuesCommand command) {
+    @PostMapping("/{dictionaryName}/values")
+    public ResponseEntity<DictionaryDto> addDictionaryValues(@PathVariable String dictionaryName, @Valid @RequestBody CreateDictionaryValuesCommand command) {
         Dictionary saved = dictionaryService.addDictionaryValues(dictionaryName, command);
         return ResponseEntity.status(HttpStatus.CREATED).body(DictionaryDto.fromDictionary(saved));
     }
@@ -46,6 +52,21 @@ public class DictionaryController {
     public ResponseEntity<Page<DictionaryDto>> getDictionaries(Pageable pageable) {
         Page<DictionaryDto> dictionaries = dictionaryService.getDictionaries(pageable);
         return ResponseEntity.ok(dictionaries);
+    }
+
+
+    @PutMapping("/{dictionaryName}")
+    public ResponseEntity<DictionaryDto> updateDictionary(@PathVariable String dictionaryName, @Valid @RequestBody UpdateDictionaryCommand command) {
+        Dictionary dictionary = dictionaryService.updateDictionary(dictionaryName, command);
+        return ResponseEntity.ok(DictionaryDto.fromDictionary(dictionary));
+    }
+
+    @PutMapping("/{dictionaryName}/values/{dictionaryValueName}")
+    public ResponseEntity<DictionaryValueDto> updateDictionaryValue(@PathVariable String dictionaryName,
+                                                                    @PathVariable String dictionaryValueName,
+                                                                    @Valid @RequestBody UpdateDictionaryValueCommand command) {
+        DictionaryValue dictionary = dictionaryService.updateDictionaryValue(dictionaryName, dictionaryValueName, command);
+        return ResponseEntity.ok(DictionaryValueDto.fromDictionaryValue(dictionary));
     }
 
 

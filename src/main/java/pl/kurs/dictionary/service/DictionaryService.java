@@ -7,10 +7,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.kurs.dictionary.exceptions.DictionaryNotFoundException;
 import pl.kurs.dictionary.exceptions.DictionaryValueNotFoundException;
+import pl.kurs.dictionary.model.command.UpdateDictionaryValueCommand;
+import pl.kurs.dictionary.service.validators.interfaces.Validator;
 import pl.kurs.dictionary.model.Dictionary;
 import pl.kurs.dictionary.model.DictionaryValue;
 import pl.kurs.dictionary.model.command.CreateDictionaryCommand;
 import pl.kurs.dictionary.model.command.CreateDictionaryValuesCommand;
+import pl.kurs.dictionary.model.command.UpdateDictionaryCommand;
 import pl.kurs.dictionary.model.dto.DictionaryDto;
 import pl.kurs.dictionary.repository.DictionaryRepository;
 import pl.kurs.dictionary.repository.DictionaryValueRepository;
@@ -20,7 +23,7 @@ import pl.kurs.dictionary.repository.DictionaryValueRepository;
 public class DictionaryService {
     private final DictionaryRepository dictionaryRepository;
     private final DictionaryValueRepository dictionaryValueRepository;
-
+    private final Validator validator;
 
     @Transactional
     public Dictionary addDictionary(CreateDictionaryCommand command) {
@@ -42,6 +45,22 @@ public class DictionaryService {
     @Transactional(readOnly = true)
     public Page<DictionaryDto> getDictionaries(Pageable pageable) {
         return dictionaryRepository.findAllWithValues(pageable);
+    }
+
+    @Transactional
+    public Dictionary updateDictionary(String dictionaryName, UpdateDictionaryCommand command) {
+        validator.validate(dictionaryName, command.currentName());
+        Dictionary dictionary = dictionaryRepository.findByName(dictionaryName).orElseThrow(DictionaryNotFoundException::new);
+        dictionary.setName(command.newName());
+        return dictionaryRepository.saveAndFlush(dictionary);
+    }
+
+    @Transactional
+    public DictionaryValue updateDictionaryValue(String dictionaryName, String dictionaryValueName, UpdateDictionaryValueCommand command) {
+        validator.validate(dictionaryValueName, command.currentValue());
+        DictionaryValue dictionaryValue = dictionaryValueRepository.findByDictionaryNameAndValue(dictionaryName, dictionaryValueName).orElseThrow(DictionaryValueNotFoundException::new);
+        dictionaryValue.setValue(command.newValue());
+        return dictionaryValueRepository.saveAndFlush(dictionaryValue);
     }
 
     @Transactional

@@ -144,7 +144,7 @@ class DictionaryServiceTest {
 
         ArgumentCaptor<DictionaryValue> captor = ArgumentCaptor.forClass(DictionaryValue.class);
         verify(dictionaryValueRepository, times(1)).saveAndFlush(captor.capture());
-        Assertions.assertEquals(command.newValue(),captor.getValue().getValue());
+        Assertions.assertEquals(command.newValue(), captor.getValue().getValue());
     }
 
 

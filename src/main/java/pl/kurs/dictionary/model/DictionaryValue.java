@@ -11,12 +11,16 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
 @Setter
 @EqualsAndHashCode(of = {"id", "value"})
 @NoArgsConstructor
+@Where(clause = "deleted = false")
+@SQLDelete(sql = "UPDATE dictionary_value SET deleted = true WHERE id = ?")
 public class DictionaryValue {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +28,8 @@ public class DictionaryValue {
 
     @Column(name = "dictionary_value")
     private String value;
+
+    private boolean deleted;
 
     @ManyToOne
     @JoinColumn(name = "dictionary_id")

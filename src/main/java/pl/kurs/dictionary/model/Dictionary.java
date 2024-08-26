@@ -10,6 +10,8 @@ import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,6 +20,8 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@Where(clause = "deleted = false")
+@SQLDelete(sql = "UPDATE dictionary SET deleted = true WHERE id = ?")
 public class Dictionary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +29,8 @@ public class Dictionary {
 
     @Column(unique = true)
     private String name;
+
+    private boolean deleted;
 
     @OneToMany(mappedBy = "dictionary", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private Set<DictionaryValue> dictionaryValuesSet = new HashSet<>();

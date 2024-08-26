@@ -27,7 +27,7 @@ public class TicketService {
 
     @Transactional
     public Bus addTicket(int busId, CreateTicketCommand command) {
-        Bus bus = busRepository.findByIdWithLock(busId).orElseThrow(IllegalArgumentException::new);
+        Bus bus = busRepository.findByIdWithLock(busId).orElseThrow(TicketNotFoundException::new);
         Ticket ticket = new Ticket(command.name(), command.surname());
         if (bus.bookTicket(ticket)) {
             return busRepository.saveAndFlush(bus);
@@ -60,12 +60,6 @@ public class TicketService {
         throw new IllegalArgumentException();
     }
 
-
-    private void setTicket(Ticket ticketToBeChanged, UpdateTicketCommand command) {
-        ticketToBeChanged.setName(command.name());
-        ticketToBeChanged.setSurname(command.surname());
-    }
-
     @Transactional
     public void removeTicket(int ticketId) {
         Ticket ticket = getTicket(ticketId);
@@ -80,5 +74,9 @@ public class TicketService {
         }
     }
 
+    private void setTicket(Ticket ticketToBeChanged, UpdateTicketCommand command) {
+        ticketToBeChanged.setName(command.name());
+        ticketToBeChanged.setSurname(command.surname());
+    }
 
 }

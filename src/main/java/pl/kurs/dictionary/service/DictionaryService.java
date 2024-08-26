@@ -1,6 +1,8 @@
 package pl.kurs.dictionary.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,13 +33,16 @@ public class DictionaryService {
     }
 
     @Transactional
+    @CacheEvict(cacheNames = "dictionary", key = "#dictionaryName")
     public Dictionary addDictionaryValues(String dictionaryName, CreateDictionaryValuesCommand command) {
         Dictionary dictionary = dictionaryRepository.findByName(dictionaryName).orElseThrow(DictionaryNotFoundException::new);
         command.valuesList().forEach(dictionary::addValue);
         return dictionaryRepository.saveAndFlush(dictionary);
     }
 
+
     @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "dictionary", key = "#name")
     public Dictionary getDictionary(String name) {
         return dictionaryRepository.findByName(name).orElseThrow(DictionaryNotFoundException::new);
     }
@@ -48,6 +53,7 @@ public class DictionaryService {
     }
 
     @Transactional
+    @CacheEvict(cacheNames = "dictionary", key = "#dictionaryName")
     public Dictionary updateDictionary(String dictionaryName, UpdateDictionaryCommand command) {
         validator.validate(dictionaryName, command.currentName());
         Dictionary dictionary = dictionaryRepository.findByName(dictionaryName).orElseThrow(DictionaryNotFoundException::new);
@@ -56,6 +62,7 @@ public class DictionaryService {
     }
 
     @Transactional
+    @CacheEvict(cacheNames = "dictionary", key = "#dictionaryName")
     public DictionaryValue updateDictionaryValue(String dictionaryName, String dictionaryValueName, UpdateDictionaryValueCommand command) {
         validator.validate(dictionaryValueName, command.currentValue());
         DictionaryValue dictionaryValue = dictionaryValueRepository.findByDictionaryNameAndValue(dictionaryName, dictionaryValueName).orElseThrow(DictionaryValueNotFoundException::new);
@@ -64,11 +71,13 @@ public class DictionaryService {
     }
 
     @Transactional
+    @CacheEvict(cacheNames = "dictionary", key = "#dictionaryName")
     public void removeDictionary(String dictionaryName) {
         dictionaryRepository.deleteByName(dictionaryName);
     }
 
     @Transactional
+    @CacheEvict(cacheNames = "dictionary", key = "#dictionaryName")
     public void removeDictionaryValue(String dictionaryName, String dictionaryValueName) {
         DictionaryValue dictionaryValue = dictionaryValueRepository.findByDictionaryNameAndValue(dictionaryName, dictionaryValueName).orElseThrow(DictionaryValueNotFoundException::new);
         Dictionary dictionary = getDictionary(dictionaryName);

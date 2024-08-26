@@ -66,4 +66,15 @@
         </sql>
     </changeSet>
 
+    <changeSet author="wojtek" id="20240828_wojtek_001">
+    <addColumn tableName="dictionary">
+        <column name="deleted" type="boolean" defaultValueBoolean="false"/>
+    </addColumn>
+    </changeSet>
+    <changeSet author="wojtek" id="20240828_wojtek_002">
+        <addColumn tableName="dictionary_value">
+            <column name="deleted" type="boolean" defaultValueBoolean="false"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
